@@ -1,6 +1,6 @@
 # FIND-TBI Project MRI Automated Statistics via FSL
 
-This folder contains a series of bash and python scripts that have been designed to estimate different brain reserve parameters, but can be used as automated methods to obtain statistics from different MRI scans (structural, diffusion, functional, etc.) using the FMRIB Software Library (FSL).
+Contains a series of bash and python scripts that have been designed to estimate different brain reserve parameters, but can be used as automated methods to obtain statistics from different MRI scans (structural, diffusion, functional, etc.) using the FMRIB Software Library (FSL).
 
 
 ## Requirements
