@@ -1,0 +1,71 @@
+/Users/a1747725/Documents/neuroimaging_projects/fsl/resting_state_test/sample_brain_scans/4062/melodic.ica/filtered_func_data.ica
+1, Unclassified noise, True
+2, Unclassified noise, True
+3, Signal, False
+4, Unclassified noise, True
+5, Unclassified noise, True
+6, Unclassified noise, True
+7, Unclassified noise, True
+8, Signal, False
+9, Signal, False
+10, Signal, False
+11, Unclassified noise, True
+12, Unclassified noise, True
+13, Unclassified noise, True
+14, Unclassified noise, True
+15, Unclassified noise, True
+16, Signal, False
+17, Signal, False
+18, Signal, False
+19, Unclassified noise, True
+20, Unclassified noise, True
+21, Signal, False
+22, Unclassified noise, True
+23, Unclassified noise, True
+24, Unclassified noise, True
+25, Unclassified noise, True
+26, Signal, False
+27, Signal, False
+28, Signal, False
+29, Unclassified noise, True
+30, Unclassified noise, True
+31, Unclassified noise, True
+32, Unclassified noise, True
+33, Unclassified noise, True
+34, Unclassified noise, True
+35, Unclassified noise, True
+36, Signal, False
+37, Unclassified noise, True
+38, Unclassified noise, True
+39, Unclassified noise, True
+40, Unclassified noise, True
+41, Signal, False
+42, Unclassified noise, True
+43, Signal, False
+44, Unclassified noise, True
+45, Unclassified noise, True
+46, Signal, False
+47, Signal, False
+48, Unclassified noise, True
+49, Unclassified noise, True
+50, Unclassified noise, True
+51, Unclassified noise, True
+52, Unclassified noise, True
+53, Signal, False
+54, Unclassified noise, True
+55, Signal, False
+56, Unclassified noise, True
+57, Signal, False
+58, Signal, False
+59, Signal, False
+60, Unclassified noise, True
+61, Unclassified noise, True
+62, Signal, False
+63, Signal, False
+64, Unclassified noise, True
+65, Unclassified noise, True
+66, Unclassified noise, True
+67, Unclassified noise, True
+68, Unclassified noise, True
+69, Unclassified noise, True
+[1, 2, 4, 5, 6, 7, 11, 12, 13, 14, 15, 19, 20, 22, 23, 24, 25, 29, 30, 31, 32, 33, 34, 35, 37, 38, 39, 40, 42, 44, 45, 48, 49, 50, 51, 52, 54, 56, 60, 61, 64, 65, 66, 67, 68, 69]
