@@ -1,0 +1,13 @@
+# This directory provides example outputs of what necessary manually produced files look like for resting-state fMRI independent component analysis (ICA; labels.txt) and white matter hyperintensity (WMH) estimation (wmh.nii.gz).
+
+## The labels.txt file contains ICA components classified as either signal or noise (completed in FSLeyes using melodic layout (script: rsfmri_manual_comp_classification.sh). To view what this looks like in FSLeyes move into the 'rsfmri_ica_component_example' directory and run the following command:
+
+	fsleyes\'97scene melodic mean.nii.gz melodic_IC.nii.gz -dr 3 10 -un -cm red-yellow -nc blue-lightblue &
+
+	Then load the labels.txt file using the GUI options in the melodic FSLeyes layout to view what components have been deemed signal or noise.
+
+## The wmh.nii.gz is a mask image that represents what was manually classified as WMHs in a subject's FLAIR image by looking for white/bright 'hot' spots in the white matter. Manual segmentation was performed in FSLeyes edit mode. To view this mask with the FLAIR image run the following command:
+
+	fsleyes FLAIR_roi_brain.nii.gz -b 60 -c 75 wmh.nii.gz -cm red -a 30 &
+
+	Toggle the visibility of the WMH mask to see what it overlays.
