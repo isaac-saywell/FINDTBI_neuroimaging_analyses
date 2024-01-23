@@ -118,60 +118,34 @@ sleep 1
 echo "______"
 sleep 1
 
-# ## FIX - automatic component classification
+## FIX - automatic component classification
 
-# echo "Automatically classifying resting-state components as 'signal' or 'unclassified noise' using FIX and a training set from sample."
-# sleep 1
-# echo "______"
-# sleep 1
-# echo "Note that pyFIX needs to be installed into a virtual environment on your machine. Currently is not part of the standard FSL package."
-#     ### https://git.fmrib.ox.ac.uk/fsl/pyfix
-# sleep 1
-# echo "______"
-# sleep 1
+echo "Automatically classifying resting-state components as 'signal' or 'unclassified noise' using FIX and a training set from sample."
+sleep 1
+echo "______"
+sleep 1
+echo "Note that pyFIX needs to be installed on your machine. Currently is not part of the standard FSL package. See the README for instructions."
+    ### https://git.fmrib.ox.ac.uk/fsl/pyfix
+sleep 1
+echo "______"
+sleep 1
 
-# ### Training the classifier 
+# ### Feature extraction for each subject melodic directory
 
-# cd "$start_dir"
-
-# echo "Creating training set/classifier using subjects with manually labelled components."
-
-# sleep 1
-# echo "______"
-# sleep 1
-
-# fix -t FIND_TBI_fmri_trainingset -l $dir_w_labels
-
-# echo "Training classifier produced as 'FIND_TBI_fmri_trainingset'."
-
-# sleep 1
-# echo "_______"
-# sleep 1
-
-# cd "$original_dir"
-
-# ### Classifying ICA components
-
-# echo "Classifying ICA components automatically, using FIX, for each subject."
-
-# sleep 1
-# echo "______"
-# sleep 1
-
-# find "$start_dir" -mindepth 1 -maxdepth 1 -type d | while read -r dir; do # while loop through all subjects
+# find "$start_dir" -maxdepth 1 -mindepth 1 -type d | sort | while read -r dir; do
 
 #     cd "$dir"
 
-#     echo "Automatically classifying components as signal or noise for subject $(basename "$dir")"
+#     echo "Extracting features for subject $(basename "$dir")"
 
 #     sleep 1
 #     echo "______"
 #     sleep 1
 
-#     fix -c melodic.ica FIND_TBI_fmri_trainingset.pyfix_model 20
+#     fix -f melodic.ica # runs FAST for partial volume estimations and extracts each independent component from 4D resting-state image (among executing other commands for other outputs)
 
-#     echo "FIX complete for subject $(basename "$dir")"
-
+#     echo "Features have been obtained for subject $(basename "$dir")"
+    
 #     sleep 1
 #     echo "______"
 #     sleep 1
@@ -180,10 +154,66 @@ sleep 1
 
 # done
 
-# echo "FIX complete for all subjects. Continuing with the script."
-# sleep 1
-# echo "______"
-# sleep 1
+echo "FIX has extracted features for all subjects. Moving onto training a classifer for automated component classification."
+
+sleep 1
+echo "______"
+sleep 1
+
+### Training the classifier 
+
+cd "$start_dir"
+
+echo "Creating training set/classifier using subjects with manually labelled components."
+
+sleep 1
+echo "______"
+sleep 1
+
+fix -t FIND_TBI_FIX_trainingset -l $dir_w_labels_with_mel
+
+echo "Training classifier produced as 'FIND_TBI_FIX_trainingset'."
+
+sleep 1
+echo "_______"
+sleep 1
+
+cd "$original_dir"
+
+### Classifying ICA components
+
+echo "Classifying ICA components automatically, using FIX, for each subject."
+
+sleep 1
+echo "______"
+sleep 1
+
+find "$start_dir" -maxdepth 1 -mindepth 1 -type d | sort | while read -r dir; do
+
+    cd "$dir"
+
+    echo "Automatically classifying components as signal or noise for subject $(basename "$dir")"
+
+    sleep 1
+    echo "______"
+    sleep 1
+
+    fix -c melodic.ica "$script_path/$start_dir/FIND_TBI_FIX_trainingset.pyfix_model" $pyfix_thr # run FIX at preset threshold using training model that should be in brain scan folder
+
+    echo "FIX complete for subject $(basename "$dir")"
+
+    sleep 1
+    echo "______"
+    sleep 1
+
+    cd "$original_dir"
+
+done
+
+echo "FIX complete for all subjects. Continuing with the script."
+sleep 1
+echo "______"
+sleep 1
 
 ## Removal of components identified as noise
 
@@ -194,37 +224,34 @@ sleep 1
 
 find "$start_dir" -maxdepth 1 -mindepth 1 -type d | sort | while read -r dir; do
 
-    if [ -e "$dir/melodic.ica/filtered_func_data.ica/labels.txt" ]; then 
+    cd "$dir"
 
-        cd "$dir"
+    echo "Putting subject $(basename "$dir") noise components in a variable and removing these via fslregilt."
 
-        echo "Putting subject $(basename "$dir") noise components in a variable and removing these via fslregilt."
+    sleep 1
+    echo "______"
+    sleep 1
 
-        sleep 1
-        echo "______"
-        sleep 1
+    noise_components=$(tail -n 1 melodic.ica/fix4melview_FIND_TBI_FIX_trainingset_thr${pyfix_thr}.txt) # putting identified noise components in a variable
+    f_noise=$(echo "$noise_components" | sed 's/\[\([^]]*\)\]/"\1"/g') # restructuring variable 
 
-        noise_components=$(tail -n 1 melodic.ica/filtered_func_data.ica/labels.txt) # putting identified noise components in a variable
-        f_noise=$(echo "$noise_components" | sed 's/\[\([^]]*\)\]/"\1"/g') # restructuring variable 
+    echo "For subject $(basename "$dir") these are the component numbers that were classified as noise: ${f_noise}"
 
-        echo "For subject $(basename "$dir") these are the component numbers that were classified as noise: ${f_noise}"
+    sleep 1
+    echo "______"
+    sleep 1
 
-        sleep 1
-        echo "______"
-        sleep 1
+    fsl_regfilt -i melodic.ica/filtered_func_data.nii.gz -d melodic.ica/filtered_func_data.ica/melodic_mix \
+    -o melodic.ica/filtered_func_data_clean.nii.gz -f "${f_noise}"
 
-        fsl_regfilt -i melodic.ica/filtered_func_data.nii.gz -d melodic.ica/filtered_func_data.ica/melodic_mix \
-        -o melodic.ica/filtered_func_data_clean.nii.gz -f "${f_noise}"
+    echo "Noise components removed from subject $(basename "$dir") resting-state functional data."
 
-        echo "Noise components removed from subject $(basename "$dir") resting-state functional data."
+    sleep 1
+    echo "______"
+    sleep 1
 
-        sleep 1
-        echo "______"
-        sleep 1
+    cd "$original_dir"
 
-        cd "$original_dir"
-
-    fi
 done
 
 ## Registering cleaned single-subject data to standard space (using applywarp) 
@@ -237,27 +264,25 @@ echo "Applying transformations/warps to each subject in dataset..."
 
 find "$start_dir" -maxdepth 1 -mindepth 1 -type d | sort | while read -r dir; do
 
-    if [ -e "$dir/melodic.ica/filtered_func_data.ica/labels.txt" ]; then 
+    cd "$dir"/melodic.ica
 
-        cd "$dir"/melodic.ica
+    echo "Using applywarp for subject $(basename "$dir")"
 
-        echo "Using applywarp for subject $(basename "$dir")"
+    sleep 1
+    echo "______"
+    sleep 1
 
-        sleep 1
-        echo "______"
-        sleep 1
+    applywarp -r reg/standard.nii.gz -i filtered_func_data_clean.nii.gz -o filtered_func_data_clean_standard.nii.gz \
+    --premat=reg/example_func2highres.mat -w reg/highres2standard_warp.nii.gz
 
-        applywarp -r reg/standard.nii.gz -i filtered_func_data_clean.nii.gz -o filtered_func_data_clean_standard.nii.gz \
-        --premat=reg/example_func2highres.mat -w reg/highres2standard_warp.nii.gz
+    echo "Subject $(basename "$dir") registered."
 
-        echo "Subject $(basename "$dir") registered."
+    sleep 1
+    echo "______"
+    sleep 1
 
-        sleep 1
-        echo "______"
-        sleep 1
-
-        cd "$original_dir"
-    fi
+    cd "$original_dir"
+    
 done
 
 echo "Cleaned resting-state functional data converted to standard space for all subjects."
