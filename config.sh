@@ -127,6 +127,11 @@ tr=0.736 # if using FIND-TBI study scans this should not need to be changed
 
 script_path="/Users/a1747725/Documents/neuroimaging_projects/fsl/brain_reserve_testing/" # path should finish in location of scripts
 
+### pyFIX threshold for number of good vs bad components
+
+pyfix_thr=20 # sensible values are in the range of '5-20', however, if it is extremely important to not have ANY good components removed, 
+             # and you're happy to therefore sacrifice the number of bad components that pyFIX will classify as 'signal' then use a lower threshold (e.g., range of 1-5)
+
 ### Lower threshold value used to generate binarised spatial maps of components
 
 thr_rs=9.5 # quite subjective, needs to be adjusted according to the data
