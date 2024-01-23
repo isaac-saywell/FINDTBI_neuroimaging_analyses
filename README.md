@@ -356,6 +356,8 @@ __Main Considerations for this Script__
 
 - In the *rsfmri_groupica+dualr.sh* there a FSLeyes command to check the output of group ICA has been commented out to ensure the script stays automated. This comment can be removed to check the data before dual regression or be left and the output can be examined as a post-processing step
 
+- For pyFIX: overall found that at a threshold of '20' is is reasonably more lenient than manual classification (including about 10-25% more components in the filtered data compared to the manual method). This is likely the best outcome though as keeping more components initially (before post-processing cleaning) is ideal in resting-state fMRI to make sure that all possible signal is included, even at the cost of including more 'bad' (noise) components in the filtered data 
+
 __Key Statistical Output File__
 
 rsfmri_data.csv
