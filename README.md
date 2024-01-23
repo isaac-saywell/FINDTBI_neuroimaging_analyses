@@ -1,6 +1,6 @@
 # FIND-TBI Project MRI Automated Statistics via FSL
 
-Contains a series of bash and python scripts that have been designed to estimate different brain reserve parameters, but can be used as automated methods to obtain statistics from different MRI scans (structural, diffusion, functional, etc.) using the FMRIB Software Library (FSL).
+This folder contains a series of bash and python scripts that have been designed to estimate different brain reserve parameters, but can be used as automated methods to obtain statistics from different MRI scans (structural, diffusion, functional, etc.) using the FMRIB Software Library (FSL).
 
 
 ## Requirements
@@ -12,6 +12,8 @@ These scripts were developed in FSL version 6.0.7.1 on MacOS (Sonoma 14.2.1), ho
 2. Install the latest release of [pyFIX](https://git.fmrib.ox.ac.uk/fsl/pyfix)
 
 pyFIX is a semi-automated classifier tool that attempts to arrange single-subject ICA components as 'signal' or 'noise' so that artefacts can be removed from fMRI data. pyFIX works by extracting fMRI features, generating a training dataset for the classifier (via manual labelling of ICA components), and using the trained dataset to automatically classify ICA components.
+
+Can be difficult to install pyFIX. Recommendations are to use command 'git clone' to save the pyFIX directory to your PC's User and install pyFIX using 'pip install -e pyfix'. From there to check if install worked type 'fix' in the terminal, this should provide options for the fix command. If this does not work then there is a need to troubleshoot the issue, make sure any dependencies are installed.
 
 
 ## Usage
@@ -400,14 +402,10 @@ Data:
     All processed brain measure data combined
 ```
 
-## Unresolved issues
+## Potential issues
 
 ### Conversion of fieldmaps to radians
 
 In FSL 6.0.7.1 the fsl_prepare_fieldmap terminal command does not exist and only allows launching of the GUI. This GUI is broken as well and does not provide an output. Likely an issue with the most recent release of FSL not having a script for the fsl_prepare_fieldmap command. The fsl_prepare_fieldmap command works with earlier releases (6.0.2.1)
 
 If the fsl_prepare_fieldmap command does not work (either presenting an error or providing no output) then copy the UNIX executable file (included in this directory along with all the scripts) into you FSL directory. More specifically copy it to /Users/your_username/fsl/bin/ (location where FSL commands are stored as executable files). This version of the fsl_prepare_fieldmap is from version 6.0.2.1 of FSL and should allow the command to work and the GUI to provide an output image
-
-### pyFIX
-
-There were difficulties setting up pyFIX and currently the code using this package does not work and has been commented-out. For now ICA components need to be manually classified for all subjects in FSLeyes using the script 'rsfmri_manual_comp_classification.sh' to proceed with resting-state fMRI analyses. You can follow instructions (linked at the beginning of the README) to install pyFIX, maybe you'll have better luck than me...
