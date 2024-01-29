@@ -38,11 +38,15 @@ There is a folder named __example_manual_files__ which contains examples of manu
 
 ### Storing of files
 
-__Scripts__ - these should be stored in the same directory as your folder containing all subject directories (e.g., scripts should be in directory 'mri' when path is: /Users/XXXX/mri/subject_brainscans/subject_X)
+__Scripts__ - these should be stored in the same directory as your folder containing all subject directories (e.g., scripts should be in directory 'mri' when path is: /Users/XXXX/mri/subject_brainscans/subject_X).
 
 __Subject brain scans__ - for the loops in these scripts to function subject brain scans should be stored in a subject-specific directory and original DICOM files from MRI scanner should be stored in another directory within each subject-specific directory (e.g., /Users/XXXX/mri/subject_brainscans/subject_X/DICOM_files)
 
-FIND-TBI DICOM files are stored within an extra folder per subject (e.g., /Users/XXXX/mri/subject_brainscans/HEAD_FIND-TBI_*/subject_X/DICOM_files). That 'HEAD_FIND-TBI_*' folder needs to be removed for these scripts to work
+FIND-TBI DICOM files are stored within an extra folder per subject (e.g., /Users/XXXX/mri/subject_brainscans/HEAD_FIND-TBI_*/subject_X/DICOM_files). That 'HEAD_FIND-TBI_*' folder needs to be removed for these scripts to work.
+
+### Removal of 'HEAD_FIND-TBI_*' directory
+
+All subject directories contain an unnecessary additional directory before DICOM files, this needs to be removed to allow the scripts to work. To fix this a small script called 'mri_excess_dir_removal.sh' has been developed that will move all DICOM files to the parent directory and delete the (now empty) 'HEAD_FIND-TBI_*' directory.
 
 ### CONFIG file
 
