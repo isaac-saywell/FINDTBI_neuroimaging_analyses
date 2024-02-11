@@ -55,7 +55,7 @@ find "$start_dir" -maxdepth 1 -mindepth 1 -type d | sort | while read -r dir; do
     sleep 1
     echo "______"
 
-    run_first_all -i T1_roi_brain -b -a T1_roi_brain-2-MNI_brain.mat -m fast \
+    run_first_all -i T1_roi_brain -b -a T1_roi_brain-2-MNI_brain.mat -m "$boundary_corr_method" \
     -s L_Accu,L_Amyg,L_Caud,L_Hipp,L_Pall,L_Puta,L_Thal,R_Accu,R_Amyg,R_Caud,R_Hipp,R_Pall,R_Puta,R_Thal \
     -o T1_sub_seg # running FIRST to segment subcortical structures using FAST as a boundary correction method
 
@@ -221,7 +221,7 @@ sleep 1
 #             sleep 1
 #             echo "______"
 
-#             fsleyes T1_roi_brain -b 60 -c 70 T1_sub_seg_all_fast_firstseg.nii.gz \
+#             fsleyes T1_roi_brain -b 60 -c 70 T1_sub_seg_all_${boundary_corr_method}_firstseg.nii.gz \
 #             -cm random -a 15 -dr 0 118 # check data
 
 #             echo "Subject $(basename "$dir") subcortical segmentation has been checked." # show logs have been displayed (if any errors)
@@ -263,12 +263,12 @@ find "$start_dir" -maxdepth 1 -mindepth 1 -type d | sort | while read -r dir; do
 
     cd "$dir"
 
-    cp T1_sub_seg_all_fast_firstseg.nii.gz ../..
+    cp T1_sub_seg_all_${boundary_corr_method}_firstseg.nii.gz ../..
     cp T1_roi_brain.nii.gz ../..
 
     cd ../..
 
-    mv T1_sub_seg_all_fast_firstseg.nii.gz subcor_webpage/$(basename "$dir")_T1_sub_seg_all_fast_firstseg.nii.gz
+    mv T1_sub_seg_all_${boundary_corr_method}_firstseg.nii.gz subcor_webpage/$(basename "$dir")_T1_sub_seg_all_${boundary_corr_method}_firstseg.nii.gz
     mv T1_roi_brain.nii.gz subcor_webpage/$(basename "$dir")_T1_roi_brain.nii.gz
 
 done
@@ -281,7 +281,7 @@ sleep 1
 
 cd subcor_webpage
 
-first_roi_slicesdir *_T1_roi_brain.nii.gz *_T1_sub_seg_all_fast_firstseg.nii.gz
+first_roi_slicesdir *_T1_roi_brain.nii.gz *_T1_sub_seg_all_${boundary_corr_method}_firstseg.nii.gz
 
 cd "$original_dir"
 
@@ -312,32 +312,32 @@ find "$start_dir" -maxdepth 1 -mindepth 1 -type d | sort | while read -r dir; do
 
     cd "$dir"
     
-    L_Accu=`fslstats T1_sub_seg_all_fast_firstseg -l 25.5 -u 26.5 -V | awk '{ vol = $2 ; print vol }'` # prints volume for Left Nucleus Accumbens
-    R_Accu=`fslstats T1_sub_seg_all_fast_firstseg -l 57.5 -u 58.5 -V | awk '{ vol = $2 ; print vol }'` # prints volume for Right Nucleus Accumbens
+    L_Accu=`fslstats T1_sub_seg_all_${boundary_corr_method}_firstseg -l 25.5 -u 26.5 -V | awk '{ vol = $2 ; print vol }'` # prints volume for Left Nucleus Accumbens
+    R_Accu=`fslstats T1_sub_seg_all_${boundary_corr_method}_firstseg -l 57.5 -u 58.5 -V | awk '{ vol = $2 ; print vol }'` # prints volume for Right Nucleus Accumbens
     TOT_Accu=$(echo "$L_Accu + $R_Accu" | bc) # prints volume for both Left and Right Nucleus Accumbens combined (needed to use bc command as float values were causing issues)
 
-    L_Amyg=`fslstats T1_sub_seg_all_fast_firstseg -l 17.5 -u 18.5 -V | awk '{ vol = $2 ; print vol }'` # prints volume for Left Amygdala
-    R_Amyg=`fslstats T1_sub_seg_all_fast_firstseg -l 53.5 -u 54.5 -V | awk '{ vol = $2 ; print vol }'` # prints volume for Right Amygdala
+    L_Amyg=`fslstats T1_sub_seg_all_${boundary_corr_method}_firstseg -l 17.5 -u 18.5 -V | awk '{ vol = $2 ; print vol }'` # prints volume for Left Amygdala
+    R_Amyg=`fslstats T1_sub_seg_all_${boundary_corr_method}_firstseg -l 53.5 -u 54.5 -V | awk '{ vol = $2 ; print vol }'` # prints volume for Right Amygdala
     TOT_Amyg=$(echo "$L_Amyg + $R_Amyg" | bc) # prints volume for both Left and Right Amygdala combined (needed to use bc command as float values were causing issues)
 
-    L_Hipp=`fslstats T1_sub_seg_all_fast_firstseg -l 16.5 -u 17.5 -V | awk '{ vol = $2 ; print vol }'` # prints volume for Left Hippocampus
-    R_Hipp=`fslstats T1_sub_seg_all_fast_firstseg -l 52.5 -u 53.5 -V | awk '{ vol = $2 ; print vol }'` # prints volume for Right Hippocampus
+    L_Hipp=`fslstats T1_sub_seg_all_${boundary_corr_method}_firstseg -l 16.5 -u 17.5 -V | awk '{ vol = $2 ; print vol }'` # prints volume for Left Hippocampus
+    R_Hipp=`fslstats T1_sub_seg_all_${boundary_corr_method}_firstseg -l 52.5 -u 53.5 -V | awk '{ vol = $2 ; print vol }'` # prints volume for Right Hippocampus
     TOT_Hipp=$(echo "$L_Hipp + $R_Hipp" | bc) # prints volume for both Left and Right Hippocampus combined (needed to use bc command as float values were causing issues)
 
-    L_Caud=`fslstats T1_sub_seg_all_fast_firstseg -l 10.5 -u 11.5 -V | awk '{ vol = $2 ; print vol }'` # prints volume for Left Caudate
-    R_Caud=`fslstats T1_sub_seg_all_fast_firstseg -l 49.5 -u 50.5 -V | awk '{ vol = $2 ; print vol }'` # prints volume for Right Caudate
+    L_Caud=`fslstats T1_sub_seg_all_${boundary_corr_method}_firstseg -l 10.5 -u 11.5 -V | awk '{ vol = $2 ; print vol }'` # prints volume for Left Caudate
+    R_Caud=`fslstats T1_sub_seg_all_${boundary_corr_method}_firstseg -l 49.5 -u 50.5 -V | awk '{ vol = $2 ; print vol }'` # prints volume for Right Caudate
     TOT_Caud=$(echo "$L_Caud + $R_Caud" | bc) # prints volume for both Left and Right Caudate combined (needed to use bc command as float values were causing issues)
 
-    L_Puta=`fslstats T1_sub_seg_all_fast_firstseg -l 11.5 -u 12.5 -V | awk '{ vol = $2 ; print vol }'` # prints volume for Left Putamen
-    R_Puta=`fslstats T1_sub_seg_all_fast_firstseg -l 50.5 -u 51.5 -V | awk '{ vol = $2 ; print vol }'` # prints volume for Right Putamen
+    L_Puta=`fslstats T1_sub_seg_all_${boundary_corr_method}_firstseg -l 11.5 -u 12.5 -V | awk '{ vol = $2 ; print vol }'` # prints volume for Left Putamen
+    R_Puta=`fslstats T1_sub_seg_all_${boundary_corr_method}_firstseg -l 50.5 -u 51.5 -V | awk '{ vol = $2 ; print vol }'` # prints volume for Right Putamen
     TOT_Puta=$(echo "$L_Puta + $R_Puta" | bc) # prints volume for both Left and Right Putamen combined (needed to use bc command as float values were causing issues)
 
-    L_Pall=`fslstats T1_sub_seg_all_fast_firstseg -l 12.5 -u 13.5 -V | awk '{ vol = $2 ; print vol }'` # prints volume for Left Pallidus
-    R_Pall=`fslstats T1_sub_seg_all_fast_firstseg -l 51.5 -u 52.5 -V | awk '{ vol = $2 ; print vol }'` # prints volume for Right Pallidus
+    L_Pall=`fslstats T1_sub_seg_all_${boundary_corr_method}_firstseg -l 12.5 -u 13.5 -V | awk '{ vol = $2 ; print vol }'` # prints volume for Left Pallidus
+    R_Pall=`fslstats T1_sub_seg_all_${boundary_corr_method}_firstseg -l 51.5 -u 52.5 -V | awk '{ vol = $2 ; print vol }'` # prints volume for Right Pallidus
     TOT_Pall=$(echo "$L_Pall + $R_Pall" | bc) # prints volume for both Left and Right PAllidus combined (needed to use bc command as float values were causing issues)
 
-    L_Thal=`fslstats T1_sub_seg_all_fast_firstseg -l 9.5 -u 10.5 -V | awk '{ vol = $2 ; print vol }'` # prints volume for Left Thalamus
-    R_Thal=`fslstats T1_sub_seg_all_fast_firstseg -l 48.5 -u 49.5 -V | awk '{ vol = $2 ; print vol }'` # prints volume for Right Thalamus
+    L_Thal=`fslstats T1_sub_seg_all_${boundary_corr_method}_firstseg -l 9.5 -u 10.5 -V | awk '{ vol = $2 ; print vol }'` # prints volume for Left Thalamus
+    R_Thal=`fslstats T1_sub_seg_all_${boundary_corr_method}_firstseg -l 48.5 -u 49.5 -V | awk '{ vol = $2 ; print vol }'` # prints volume for Right Thalamus
     TOT_Thal=$(echo "$L_Thal + $R_Thal" | bc) # prints volume for both Left and Right Thalamus combined (needed to use bc command as float values were causing issues)
 
     # The output of subcortical segmenetation via FIRST uses CMA standard labels for each structure
