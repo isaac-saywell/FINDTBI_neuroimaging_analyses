@@ -415,3 +415,14 @@ Data:
 In FSL 6.0.7.1 the fsl_prepare_fieldmap terminal command does not exist and only allows launching of the GUI. This GUI is broken as well and does not provide an output. Likely an issue with the most recent release of FSL not having a script for the fsl_prepare_fieldmap command. The fsl_prepare_fieldmap command works with earlier releases (6.0.2.1)
 
 If the fsl_prepare_fieldmap command does not work (either presenting an error or providing no output) then copy the UNIX executable file (included in this directory along with all the scripts) into you FSL directory. More specifically copy it to /Users/your_username/fsl/bin/ (location where FSL commands are stored as executable files). This version of the fsl_prepare_fieldmap is from version 6.0.2.1 of FSL and should allow the command to work and the GUI to provide an output image
+
+
+## Latest updates
+
+### Subcortical nuclei diffusion statistics
+
+The script *dwi_subcor_stats.sh* is an extension of the DWI and subcortical nuclei segmentation scripts. It should be run after these to produce mean diffusio (FA, MD, AD, RD) statistics for left, right and both hemisphere structures (putamen, caudate, globus pallidus, hippocampus, amgydala, thalamus, nucleus accumbens)
+
+### Specification of subcortical nuclei segmentation boundary correction method
+
+In the config file there is now the option to select the boundary correction method one wishes to use to segment subcortical nuclei (options are outlined in the config file). This affects calculation of subcortical nuclei volume and mean diffusion statistics for these subcortical nuclei.
