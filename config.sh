@@ -152,3 +152,10 @@ thr=0.9 # generic threshold value is 0.9, this can be altered as needed based on
 
 clus_size=1
 
+
+
+## Setting subcortical segmentation variables
+
+### Boundary correction method (options are = 'auto', 'fast', a numerical threshold value, or no method [give this variable no value])
+
+boundary_corr_method="fast"
