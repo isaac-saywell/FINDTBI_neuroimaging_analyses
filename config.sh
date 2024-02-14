@@ -55,7 +55,7 @@ output_dir="/Users/a1747725/Documents/neuroimaging_projects/fsl/brain_reserve_te
 
 ### Path to standard space (MNI152) brain image (brain extracted)
 
-MNI_input="${FSLDIR}/data/standard/MNI152_T1_2mm_brain_mask.nii.gz" # **should not need to change this**
+MNI_input="${FSLDIR}/data/standard/MNI152_T1_2mm_brain.nii.gz" # **should not need to change this**
 
 ### Path to 4D resting-state functional image
 
